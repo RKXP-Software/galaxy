@@ -1,0 +1,33 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Recursos do pdf.js copiados de node_modules
+public/pdfjs
+
+# Arquivos de teste gerados por scripts/gen_*.py e gen_office_fixtures.ps1
+fixtures/
+
+# Saída do build Rust
+src-tauri/target/
