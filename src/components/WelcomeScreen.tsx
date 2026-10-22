@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 import { openFileDialog } from "../app/actions";
 import { useApp } from "../app/store";
 import { GROUPS, viewerForExtension } from "../lib/fileTypes";
@@ -25,12 +23,6 @@ export function WelcomeScreen() {
   const openPaths = useApp((s) => s.openPaths);
   const removeRecent = useApp((s) => s.removeRecent);
   const clearRecent = useApp((s) => s.clearRecent);
-  const loadRecent = useApp((s) => s.loadRecent);
-
-  useEffect(() => {
-    void loadRecent();
-  }, [loadRecent]);
-
   return (
     <div className="welcome">
       <div className="welcome-hero">

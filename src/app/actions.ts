@@ -2,8 +2,8 @@ import { open } from "@tauri-apps/plugin-dialog";
 
 import { ALL_EXTENSIONS, GROUPS } from "../lib/fileTypes";
 import { api, errorMessage } from "../lib/tauri";
-import { getSaver } from "./savers";
-import { useApp } from "./store";
+import { getController } from "./controllers";
+import { useApp, type NewFileKind } from "./store";
 
 export async function openFileDialog() {
   const selected = await open({
@@ -22,12 +22,26 @@ export async function openFileDialog() {
 
 export async function saveActiveTab() {
   const { activeId, notify } = useApp.getState();
-  const saver = activeId ? getSaver(activeId) : undefined;
+  const saver = activeId ? getController(activeId).save : undefined;
   if (!saver) {
     if (activeId) notify("info", "Este tipo de arquivo não pode ser editado.");
     return;
   }
   await saver();
+}
+
+export function newFile(kind: NewFileKind = "txt") {
+  useApp.getState().newFile(kind);
+}
+
+export async function saveActiveTabAs() {
+  const { activeId, notify } = useApp.getState();
+  const saveAs = activeId ? getController(activeId).saveAs : undefined;
+  if (!saveAs) {
+    if (activeId) notify("info", "Este tipo de arquivo não pode ser editado.");
+    return;
+  }
+  await saveAs();
 }
 
 export async function closeActiveTab() {

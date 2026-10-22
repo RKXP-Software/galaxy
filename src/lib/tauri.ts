@@ -45,6 +45,14 @@ export interface ZipEntryInfo {
   modified: string | null;
 }
 
+export interface HistoryVersion {
+  /** Identificador para ler a versão. */
+  id: string;
+  /** Quando foi guardada (ms desde 1970). */
+  timestamp: number;
+  size: number;
+}
+
 export interface DocBlock {
   kind: string;
   text: string;
@@ -70,6 +78,8 @@ export const api = {
   readText: (path: string) => invoke<TextFile>("read_text", { path }),
   writeText: (path: string, content: string, encoding: string, bom: boolean, lineEnding: string) =>
     invoke<FileInfo>("write_text", { path, content, encoding, bom, lineEnding }),
+  historyList: (path: string) => invoke<HistoryVersion[]>("history_list", { path }),
+  historyRead: (path: string, id: string) => invoke<string>("history_read", { path, id }),
   sheetOpen: (path: string) => invoke<WorkbookInfo>("sheet_open", { path }),
   sheetLoad: (path: string, sheet: number) => invoke<SheetDims>("sheet_load", { path, sheet }),
   sheetRows: (path: string, sheet: number, offset: number, limit: number) =>

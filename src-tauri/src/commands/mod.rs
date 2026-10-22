@@ -1,6 +1,7 @@
 pub mod archive;
 pub mod extract;
 pub mod file;
+pub mod history;
 pub mod sheet;
 pub mod text;
 

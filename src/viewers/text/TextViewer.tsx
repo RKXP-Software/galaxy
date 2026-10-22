@@ -41,6 +41,7 @@ export default function TextViewer({ tab }: ViewerProps) {
       <div className="viewer-body">
         <CodeEditor
           initialValue={doc.content}
+          tabId={tab.id}
           language={language}
           readOnly={doc.readOnly}
           wrap={wrap}

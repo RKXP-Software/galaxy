@@ -30,4 +30,5 @@ export const VIEWERS: Record<ViewerId, Viewer> = {
   zip: lazy(() => import("./archive/ZipViewer")),
   epub: lazy(() => import("./epub/EpubViewer")),
   hex: lazy(() => import("./fallback/HexViewer")),
+  diff: lazy(() => import("./diff/DiffViewer")),
 };

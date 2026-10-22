@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { openFileDialog } from "../app/actions";
+import { newFile } from "../app/actions";
 import { useApp } from "../app/store";
 import { ChevronDownIcon, CloseIcon, PlusIcon, ViewerIcon } from "./icons";
 
@@ -79,7 +79,7 @@ export function TabBar() {
           </div>
         ))}
       </div>
-      <button className="icon-button tab-new" title="Abrir arquivo (Ctrl+O)" onClick={() => void openFileDialog()}>
+      <button className="icon-button tab-new" title="Novo arquivo (Ctrl+N)" onClick={() => newFile("txt")}>
         <PlusIcon />
       </button>
       {tabs.length > 1 && (

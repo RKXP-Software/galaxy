@@ -69,6 +69,8 @@ export default function JsonViewer({ tab }: ViewerProps) {
       <div className="viewer-body">
         <div className="pane-fill" hidden={mode !== "text"}>
           <CodeEditor
+            tabId={tab.id}
+            beforeReveal={() => setMode("text")}
             initialValue={doc.content}
             language="json"
             readOnly={doc.readOnly}

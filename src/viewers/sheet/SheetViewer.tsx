@@ -37,6 +37,7 @@ function CsvText({ tab, onSaved }: { tab: Tab; onSaved: () => void }) {
       <TextBanners doc={doc} />
       <div className="viewer-body">
         <CodeEditor
+          tabId={tab.id}
           initialValue={doc.content}
           language={null}
           readOnly={doc.readOnly}

@@ -205,19 +205,32 @@
 .json-summary {
   color: var(--fg-muted);
 }
+/* Cores do JSON no tema escuro (explícito ou do sistema). */
 @media (prefers-color-scheme: dark) {
-  .json-key {
+  :root:not([data-theme="light"]) .json-key {
     color: #ff7ad9;
   }
-  .json-string {
+  :root:not([data-theme="light"]) .json-string {
     color: #7ee2a1;
   }
-  .json-number {
+  :root:not([data-theme="light"]) .json-number {
     color: #79b8ff;
   }
-  .json-boolean {
+  :root:not([data-theme="light"]) .json-boolean {
     color: #c9a7ff;
   }
+}
+:root[data-theme="dark"] .json-key {
+  color: #ff7ad9;
+}
+:root[data-theme="dark"] .json-string {
+  color: #7ee2a1;
+}
+:root[data-theme="dark"] .json-number {
+  color: #79b8ff;
+}
+:root[data-theme="dark"] .json-boolean {
+  color: #c9a7ff;
 }
 
 /* ===== Imagem ===== */
@@ -635,4 +648,71 @@
 }
 .hex-ascii {
   color: var(--fg-muted);
+}
+
+/* ===== Diff ===== */
+.diff-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+.diff-source select {
+  max-width: 230px;
+}
+.diff-body {
+  background: var(--bg-elev);
+  overflow: hidden;
+}
+.diff-body > .center-message {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: var(--bg-elev);
+}
+.diff-host {
+  height: 100%;
+}
+.diff-host .cm-mergeView {
+  height: 100%;
+  overflow: auto;
+}
+.diff-host .cm-mergeView .cm-editor {
+  height: auto;
+}
+.diff-host.mode-unified > .cm-editor {
+  height: 100%;
+}
+.cm-changedLine {
+  background-color: color-mix(in srgb, var(--success) 14%, transparent) !important;
+}
+.cm-deletedChunk {
+  background-color: color-mix(in srgb, var(--danger) 14%, transparent) !important;
+}
+.cm-changedText {
+  background: color-mix(in srgb, var(--success) 38%, transparent) !important;
+}
+.cm-deletedChunk .cm-deletedText,
+.cm-deletedText {
+  background: color-mix(in srgb, var(--danger) 38%, transparent) !important;
+}
+.cm-mergeView .cm-changedLine .cm-changedText,
+.cm-mergeView .cm-changedText {
+  background: color-mix(in srgb, var(--success) 38%, transparent) !important;
+}
+.cm-collapsedLines {
+  color: var(--fg-muted);
+  background: var(--bg-sunken);
+}
+
+/* O diff lado a lado ocupa toda a altura, mesmo com pouco texto. */
+.diff-host .cm-mergeViewEditors,
+.diff-host .cm-mergeViewEditor,
+.diff-host .cm-mergeViewEditor .cm-editor {
+  min-height: 100%;
+}
+
+/* Mesmo fundo do tema escuro do editor, para não aparecer faixa embaixo do texto. */
+.diff-body.dark {
+  background: #282c34;
 }

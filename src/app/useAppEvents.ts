@@ -7,7 +7,9 @@ import { getCurrentWindow } from "@tauri-apps/api/window";
 import { ask } from "@tauri-apps/plugin-dialog";
 
 import { api } from "../lib/tauri";
-import { closeActiveTab, openFileDialog, saveActiveTab } from "./actions";
+import { FOCUS_SEARCH_EVENT } from "../components/TabSearch";
+import { closeActiveTab, newFile, openFileDialog, saveActiveTab, saveActiveTabAs } from "./actions";
+import { diffUnsaved } from "./diffActions";
 import { useApp } from "./store";
 
 function useShortcuts() {
@@ -26,7 +28,13 @@ function useShortcuts() {
         void openFileDialog();
       } else if (key === "s") {
         e.preventDefault();
-        void saveActiveTab();
+        void (e.shiftKey ? saveActiveTabAs() : saveActiveTab());
+      } else if (key === "n") {
+        e.preventDefault();
+        newFile("txt");
+      } else if (key === "d" && e.altKey) {
+        e.preventDefault();
+        diffUnsaved();
       } else if (key === "w" || key === "f4") {
         e.preventDefault();
         void closeActiveTab();
@@ -37,8 +45,9 @@ function useShortcuts() {
         e.preventDefault();
         cycle(key === "pagedown" ? 1 : -1);
       } else if (key === "p") {
-        // Imprimir a janela inteira não faz sentido aqui.
+        // Busca entre as abas abertas (no lugar de imprimir a janela inteira).
         e.preventDefault();
+        window.dispatchEvent(new Event(FOCUS_SEARCH_EVENT));
       }
     };
     // Captura: o atalho vale mesmo com o foco dentro do editor.
@@ -67,9 +76,29 @@ function useFileDrop() {
   return dragging;
 }
 
+/** Carrega as configurações salvas e aplica o tema (também ao título nativo da janela). */
+function useTheme() {
+  const theme = useApp((s) => s.theme);
+  useEffect(() => {
+    void useApp.getState().loadSettings();
+  }, []);
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "system") delete root.dataset.theme;
+    else root.dataset.theme = theme;
+    // Barra de título do Windows acompanha o tema; "sistema" devolve o controle ao Windows.
+    void getCurrentWindow().setTheme(theme === "system" ? null : theme).catch(() => undefined);
+  }, [theme]);
+}
+
 function useExternalFiles() {
   useEffect(() => {
-    void api.startupFiles().then((paths) => useApp.getState().openPaths(paths));
+    // As configurações carregam primeiro: abrir um arquivo antes gravaria uma lista de recentes incompleta.
+    void useApp
+      .getState()
+      .loadSettings()
+      .then(() => api.startupFiles())
+      .then((paths) => useApp.getState().openPaths(paths));
     // Outra execução do Galaxy (ex.: duplo clique no Explorer) repassa os arquivos.
     const unlisten = listen<string[]>("open-files", (e) => void useApp.getState().openPaths(e.payload));
     return () => void unlisten.then((fn) => fn());
@@ -120,6 +149,7 @@ function useContextMenuGuard() {
 
 export function useAppEvents() {
   useShortcuts();
+  useTheme();
   useExternalFiles();
   useWindowTitleAndClose();
   useContextMenuGuard();

@@ -1,6 +1,7 @@
 mod commands;
 mod detect;
 mod formats;
+mod history;
 
 use std::path::Path;
 use std::sync::Mutex;
@@ -68,6 +69,8 @@ pub fn run() {
             commands::file::reveal_in_explorer,
             commands::text::read_text,
             commands::text::write_text,
+            commands::history::history_list,
+            commands::history::history_read,
             commands::sheet::sheet_open,
             commands::sheet::sheet_load,
             commands::sheet::sheet_rows,

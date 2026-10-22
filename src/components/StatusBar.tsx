@@ -4,7 +4,7 @@ import { VIEWER_LABELS, type ViewerId } from "../lib/fileTypes";
 import { formatBytes, formatDate } from "../lib/format";
 import { ExternalIcon, FolderOpenIcon } from "./icons";
 
-const VIEWER_OPTIONS = Object.entries(VIEWER_LABELS) as [ViewerId, string][];
+const VIEWER_OPTIONS = (Object.entries(VIEWER_LABELS) as [ViewerId, string][]).filter(([id]) => id !== "diff");
 
 export function StatusBar() {
   const tab = useActiveTab();
@@ -20,10 +20,15 @@ export function StatusBar() {
     );
   }
 
+  // Arquivo novo e comparação não têm caminho em disco.
+  const hasFile = !!tab.info.path;
+  // Trocar o visualizador não faz sentido numa comparação nem num arquivo ainda não salvo.
+  const canSwitchViewer = tab.viewer !== "diff" && !tab.untitled;
+
   return (
     <footer className="statusbar">
       <span title={tab.info.path} className="status-path">
-        {tab.info.path}
+        {hasFile ? tab.info.path : tab.untitled ? "Arquivo novo, ainda não salvo" : tab.info.name}
       </span>
       <span className="spacer" />
       {Object.entries(tab.status).map(([key, value]) =>
@@ -33,27 +38,33 @@ export function StatusBar() {
           </span>
         ) : null,
       )}
-      <span className="status-item">{formatBytes(tab.info.size)}</span>
-      {tab.info.modified != null && (
+      {hasFile && <span className="status-item">{formatBytes(tab.info.size)}</span>}
+      {hasFile && tab.info.modified != null && (
         <span className="status-item" title="Modificado em">
           {formatDate(tab.info.modified)}
         </span>
       )}
-      <label className="status-item status-select" title="Abrir este arquivo com outro visualizador">
-        <select value={tab.viewer} onChange={(e) => setViewer(tab.id, e.target.value as ViewerId)}>
-          {VIEWER_OPTIONS.map(([id, label]) => (
-            <option key={id} value={id}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </label>
-      <button className="icon-button small" title="Mostrar na pasta" onClick={() => void revealInExplorer(tab.info.path)}>
-        <FolderOpenIcon size={14} />
-      </button>
-      <button className="icon-button small" title="Abrir no app padrão do Windows" onClick={() => void openWithSystem(tab.info.path)}>
-        <ExternalIcon size={14} />
-      </button>
+      {canSwitchViewer && (
+        <label className="status-item status-select" title="Abrir este arquivo com outro visualizador">
+          <select value={tab.viewer} onChange={(e) => setViewer(tab.id, e.target.value as ViewerId)}>
+            {VIEWER_OPTIONS.map(([id, label]) => (
+              <option key={id} value={id}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
+      )}
+      {hasFile && (
+        <>
+          <button className="icon-button small" title="Mostrar na pasta" onClick={() => void revealInExplorer(tab.info.path)}>
+            <FolderOpenIcon size={14} />
+          </button>
+          <button className="icon-button small" title="Abrir no app padrão do Windows" onClick={() => void openWithSystem(tab.info.path)}>
+            <ExternalIcon size={14} />
+          </button>
+        </>
+      )}
     </footer>
   );
 }

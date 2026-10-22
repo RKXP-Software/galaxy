@@ -16,7 +16,8 @@ export type ViewerId =
   | "extracted"
   | "zip"
   | "epub"
-  | "hex";
+  | "hex"
+  | "diff";
 
 export const CODE_EXTENSIONS = [
   "js", "mjs", "cjs", "jsx", "ts", "mts", "cts", "tsx", "py", "pyw", "html", "htm", "xhtml",
@@ -68,6 +69,7 @@ export const VIEWER_LABELS: Record<ViewerId, string> = {
   zip: "Arquivo compactado",
   epub: "E-book",
   hex: "Binário",
+  diff: "Comparação",
 };
 
 /** Visualizadores que permitem editar e salvar. */

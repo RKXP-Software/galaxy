@@ -48,6 +48,8 @@ export default function MarkdownViewer({ tab }: ViewerProps) {
         {/* O editor fica montado mesmo oculto para não perder o histórico de desfazer. */}
         <div className="pane" hidden={mode === "preview"}>
           <CodeEditor
+            tabId={tab.id}
+            beforeReveal={() => setMode((m) => (m === "preview" ? "edit" : m))}
             initialValue={doc.content}
             language="md"
             wrap

@@ -29,16 +29,23 @@ Feito com **Tauri 2** (Rust) + **React** + **TypeScript**. O instalador tem pouc
 
 Arquivos de texto são lidos com a codificação detectada (UTF-8, UTF-16, Windows-1252...) e salvos na mesma codificação e com as mesmas quebras de linha.
 
+**Histórico de versões:** a cada salvamento no Galaxy o app guarda uma cópia (até 50 por arquivo, de até 5 MB cada) na pasta de dados do app. Elas aparecem em Comparar › Histórico de versões. O histórico só registra o que foi salvo pelo Galaxy.
+
 ## Recursos
 
+- Barra de menu (Arquivo, Exibir, Comparar) com novo arquivo, abrir, tema claro/escuro/sistema e busca
 - Abas, com encolhimento automático e menu com todas as abas abertas
+- Busca nas abas abertas (Ctrl+P): por nome e pelo conteúdo, inclusive texto ainda não salvo
+- Arquivos novos (Ctrl+N), Salvar como (Ctrl+Shift+S)
+- Diff: alterações não salvas contra o disco, histórico de versões salvas e comparação com outra aba ou arquivo, lado a lado ou unificado
+- Minimapa do arquivo na lateral dos editores de texto, como no VS Code
 - Arrastar e soltar, Ctrl+O, arquivos recentes
 - Ctrl+S salva; indicador de alterações não salvas
 - Tema claro/escuro seguindo o Windows
 - Instância única: abrir outro arquivo vira aba na janela já aberta
 - "Abrir com" do Windows (o instalador registra as extensões suportadas)
 
-Atalhos: `Ctrl+O` abrir · `Ctrl+S` salvar · `Ctrl+W` fechar aba · `Ctrl+Tab` / `Ctrl+Shift+Tab` trocar de aba · `Ctrl+F` buscar (PDF).
+Atalhos: `Ctrl+N` novo · `Ctrl+O` abrir · `Ctrl+S` salvar · `Ctrl+Shift+S` salvar como · `Ctrl+P` buscar nas abas · `Ctrl+Alt+D` alterações não salvas · `Ctrl+W` fechar aba · `Ctrl+Tab` / `Ctrl+Shift+Tab` trocar de aba · `Ctrl+F` buscar (PDF).
 
 ## Instalação
 
@@ -82,9 +89,11 @@ src/                    front-end React
   lib/                  wrappers dos comandos Rust, mapa de formatos
   viewers/              um visualizador por formato, carregado sob demanda
     registry.ts         extensão → visualizador
+    diff/               comparação de textos (@codemirror/merge)
 src-tauri/src/          back-end Rust
   detect.rs             identifica o tipo pelos bytes
-  commands/             texto, planilhas, zip, extração de documentos
+  commands/             texto, planilhas, zip, histórico, extração de documentos
+  history.rs            cópias das versões salvas de cada arquivo
   formats/              leitores de doc, rtf e odt
 assets/icons/galaxy.svg ícone do app (fonte)
 ```

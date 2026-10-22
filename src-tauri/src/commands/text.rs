@@ -2,11 +2,15 @@ use std::fs::File;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 
+use tauri::AppHandle;
+
 use chardetng::{EncodingDetector, Iso2022JpDetection, Utf8Detection};
 use encoding_rs::{Encoding, UTF_16BE, UTF_16LE, UTF_8};
 use serde::Serialize;
 
+use super::history::base_dir;
 use super::{io_err, CmdResult};
+use crate::history;
 use crate::detect::{self, FileInfo};
 
 /// Acima disso o arquivo abre só para leitura e truncado.
@@ -142,6 +146,7 @@ pub fn read_text(path: String) -> CmdResult<TextFile> {
 
 #[tauri::command(async)]
 pub fn write_text(
+    app: AppHandle,
     path: String,
     content: String,
     encoding: String,
@@ -150,7 +155,16 @@ pub fn write_text(
 ) -> CmdResult<FileInfo> {
     let path = PathBuf::from(path);
     let bytes = encode(&content, &encoding, bom, &line_ending)?;
+    // Histórico: guarda o que estava em disco (se ainda não estiver guardado) e o novo
+    // conteúdo. Falhas aqui nunca impedem o salvamento.
+    let base = base_dir(&app).ok();
+    if let (Some(base), Ok(previous)) = (&base, std::fs::read(&path)) {
+        let _ = history::snapshot(base, &path, &previous);
+    }
     write_atomic(&path, &bytes).map_err(io_err)?;
+    if let Some(base) = &base {
+        let _ = history::snapshot(base, &path, &bytes);
+    }
     detect::inspect(&path).map_err(io_err)
 }
 

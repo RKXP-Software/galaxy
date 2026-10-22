@@ -1,6 +1,7 @@
 import { useAppEvents } from "./app/useAppEvents";
 import { useApp } from "./app/store";
 import { Notices } from "./components/common";
+import { MenuBar } from "./components/MenuBar";
 import { FolderOpenIcon } from "./components/icons";
 import { StatusBar } from "./components/StatusBar";
 import { TabBar } from "./components/TabBar";
@@ -14,6 +15,7 @@ export default function App() {
 
   return (
     <div className="app">
+      <MenuBar />
       <TabBar />
       <main className="content">
         {tabs.length === 0 && <WelcomeScreen />}

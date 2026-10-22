@@ -109,6 +109,13 @@ const PATHS: Record<ViewerId, ReactNode> = {
       <path d="M9 12v5M15 12v5M12 12h0M12 17h0" />
     </>
   ),
+  diff: (
+    <>
+      <rect x="3" y="4" width="7" height="16" rx="1.5" />
+      <rect x="14" y="4" width="7" height="16" rx="1.5" />
+      <path d="M5.5 9h2M5.5 13h2M16.5 11h2M17.5 10v2" />
+    </>
+  ),
 };
 
 export function ViewerIcon({ viewer, ...rest }: IconProps & { viewer: ViewerId }) {
@@ -195,5 +202,37 @@ export const GalaxyLogo = ({ size = 64 }: { size?: number }) => (
 export const ChevronDownIcon = (p: IconProps) => (
   <Icon {...p}>
     <path d="m6 9 6 6 6-6" />
+  </Icon>
+);
+
+export const FileNewIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z M14 3v5h5M12 11v6M9 14h6" />
+  </Icon>
+);
+
+export const SunIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <circle cx="12" cy="12" r="4" />
+    <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4" />
+  </Icon>
+);
+
+export const MoonIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z" />
+  </Icon>
+);
+
+export const MonitorIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <rect x="3" y="4" width="18" height="12" rx="2" />
+    <path d="M8 20h8M12 16v4" />
+  </Icon>
+);
+
+export const CheckIcon = (p: IconProps) => (
+  <Icon {...p}>
+    <path d="m5 12 5 5 9-10" />
   </Icon>
 );
